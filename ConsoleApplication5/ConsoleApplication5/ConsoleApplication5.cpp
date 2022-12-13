@@ -67,6 +67,7 @@ int main()
 		default: cout << "Не верный выбор/n";
 		}
 	}
+	fs.close();
 }
 
 int menu()
