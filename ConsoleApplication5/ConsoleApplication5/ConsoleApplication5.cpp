@@ -29,7 +29,7 @@ void find();
 void clearBD() {
 	cout << "\nБаза данных очищена\n\n";
 	ofstream ofs;
-	ofs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt", ofstream::out | ofstream::trunc);
+	ofs.open("..\\db.txt", ofstream::out | ofstream::trunc);
 	ofs.close();
 	mas.clear();
 	system("pause");
@@ -40,7 +40,7 @@ int main()
 	SetConsoleOutputCP(1251); // Эти две функции для того чтобы русские буквы норм отображались
 	SetConsoleCP(1251);
 	ifstream fs;
-	fs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt");
+	fs.open("..\\db.txt");
 	if (!fs) {
 		cout << "File error - can't open to read data!";
 		cin.sync(); cin.get(); return 2;
@@ -105,7 +105,7 @@ void enter_new() //Функция ввода новой товара
 		cout << "Наименование товара: \n";
 		cin >> mymas.product_name;
 		fstream fs;
-		fs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt", ios::app);
+		fs.open("..\\db.txt", ios::app);
 			fs << mymas.product_name << "\n";
 			cout << "Категория товара: \n";
 			cin >> mymas.category;
@@ -128,7 +128,7 @@ void enter_new() //Функция ввода новой товара
 	else cout << "Введено максимальное кол-во записей";
 	mas.clear();
 	ifstream fs;
-	fs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt");
+	fs.open("..\\db.txt");
 	bool flag = false;
 	if (!fs) {
 		cout << "File error - can't open to read data!";
