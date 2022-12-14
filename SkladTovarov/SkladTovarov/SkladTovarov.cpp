@@ -128,7 +128,7 @@ void enter_new() //Функция ввода новой товара
 	else cout << "Введено максимальное кол-во записей";
 	mas.clear();
 	ifstream fs;
-	fs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt");
+	fs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\SkladTovarov\\db.txt");
 	bool flag = false;
 	if (!fs) {
 		cout << "File error - can't open to read data!";
