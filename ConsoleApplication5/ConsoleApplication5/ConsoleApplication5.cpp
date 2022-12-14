@@ -37,6 +37,9 @@ void clearBD() {
 
 int main()
 {
+	ofstream ofs;
+	ofs.open("..\\db.txt", ios::app);
+	ofs.close();
 	SetConsoleOutputCP(1251); // Эти две функции для того чтобы русские буквы норм отображались
 	SetConsoleCP(1251);
 	ifstream fs;
