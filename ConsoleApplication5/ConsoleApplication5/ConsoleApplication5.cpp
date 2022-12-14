@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <fstream>
-#include <vector>
 #include <string>
+#include <vector>
 #include <Windows.h>
 
 using namespace std;
@@ -16,8 +16,7 @@ struct products //объявляем шаблон структуры
 	char production_date[30]; //Дата производства товара
 	int product_price; //Цена товара
 };
-
-struct products mas[30]; //Объвляем глобальный массив структур
+vector <products> mas; //Объвляем глобальный массив структур
 struct tmp; //Объявляем временую переменную структурного типа
 int sch = 0; //Счетчик полных записей
 int sw; //Переключатель
@@ -28,9 +27,12 @@ void out();
 void find();
 
 void clearBD() {
+	cout << "\nБаза данных очищена\n\n";
 	ofstream ofs;
-	ofs.open("C:\\Users\\nik85\\source\\repos\\ConsoleApplication5\\ConsoleApplication5\\db.txt", ofstream::out | ofstream::trunc);
+	ofs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt", ofstream::out | ofstream::trunc);
 	ofs.close();
+	mas.clear();
+	system("pause");
 }
 
 int main()
@@ -38,21 +40,23 @@ int main()
 	SetConsoleOutputCP(1251); // Эти две функции для того чтобы русские буквы норм отображались
 	SetConsoleCP(1251);
 	ifstream fs;
-	fs.open("C:\\Users\\nik85\\source\\repos\\ConsoleApplication5\\ConsoleApplication5\\db.txt");
-	int elem = 0;
+	fs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt");
 	if (!fs) {
 		cout << "File error - can't open to read data!";
 		cin.sync(); cin.get(); return 2;
 	}
 	while (1){
-			fs >> mas[elem].product_name;
-			fs >> mas[elem].category;
-			fs >> mas[elem].product_code;
-			fs >> mas[elem].production_date;
-			fs >> mas[elem].product_price;
-			if (fs.eof()) break;
-			elem += 1;
-			sch += 1;
+		if (!fs.eof()) {
+			products mymas;
+			fs >> mymas.product_name;
+			fs >> mymas.category;
+			fs >> mymas.product_code;
+			fs >> mymas.production_date;
+			fs >> mymas.product_price;
+			if (mymas.category != "") { mas.push_back(mymas); }
+		}
+		if (fs.eof()) break;
+		sch += 1;
 	}
 	
 	while (1)
@@ -93,33 +97,57 @@ int menu()
 void enter_new() //Функция ввода новой товара
 {
 	system("cls");
-	if (sch < 30) //Вводим новую запись только, если счетчик полных записей меньше максимального количества записей
+	if (1) //Вводим новую запись только, если счетчик полных записей меньше максимального количества записей
 	{
+		products mymas;
 		cout << "Запись номер" << sch + 1; //Выводим номер записи
 		cout << "\n(Всё вводить без пробелов)\n";
 		cout << "Наименование товара: \n";
-		cin >> mas[sch].product_name;
+		cin >> mymas.product_name;
 		fstream fs;
-		fs.open("C:\\Users\\nik85\\source\\repos\\ConsoleApplication5\\ConsoleApplication5\\db.txt", ios::app);
-		fs << mas[sch].product_name << "\n";
-		cout << "Категория товара: \n";
-		cin >> mas[sch].category;
-		fs << mas[sch].category << "\n";
-		cout << "Код товара (шестизначное число):\n";
-		cin >> mas[sch].product_code;
-		fs << mas[sch].product_code << "\n";
-		cout << "Дата производства товара:\n";
-		cin >> mas[sch].production_date;
-		fs << mas[sch].production_date << "\n";
-		cout << "Цена товара в рублях:\n";
-		cin >> mas[sch].product_price;
-		fs << mas[sch].product_price << "\n";
-		cout << "Товар успешно добавлен" << endl;
-
-		sch++; //увеличиваем счетчик полных записей на единицу
+		fs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt", ios::app);
+			fs << mymas.product_name << "\n";
+			cout << "Категория товара: \n";
+			cin >> mymas.category;
+			fs << mymas.category << "\n";
+			cout << "Код товара (шестизначное число):\n";
+			cin >> mymas.product_code;
+			fs << mymas.product_code << "\n";
+			cout << "Дата производства товара:\n";
+			cin >> mymas.production_date;
+			fs << mymas.production_date << "\n";
+			cout << "Цена товара в рублях:\n";
+			cin >> mymas.product_price;
+			fs << mymas.product_price << "\n";
+			cout << "Товар успешно добавлен" << endl;
+			mas.push_back(mymas);
+			sch++;
+		//увеличиваем счетчик полных записей на единицу
 		fs.close();
 	}
 	else cout << "Введено максимальное кол-во записей";
+	mas.clear();
+	ifstream fs;
+	fs.open("C:\\Users\\nik85\\OneDrive\\Рабочий стол\\RamazinProject\\ConsoleApplication5\\db.txt");
+	bool flag = false;
+	if (!fs) {
+		cout << "File error - can't open to read data!";
+		cin.sync(); cin.get(); flag = true;
+	}
+	while (!flag) {
+		if (!fs.eof()) {
+			products mymas;
+			fs >> mymas.product_name;
+			fs >> mymas.category;
+			fs >> mymas.product_code;
+			fs >> mymas.production_date;
+			fs >> mymas.product_price;
+			if (mymas.category != ""){mas.push_back(mymas);}
+			
+		}
+		if (fs.eof()) break;
+		sch += 1;
+	}
 }
 
 
@@ -128,52 +156,24 @@ void enter_new() //Функция ввода новой товара
 void out() //Функция вывода записей
 {
 	setlocale(LC_ALL, "Russian");
-	int sw; //Переключатель для выбора выводить все записи или одну
-	int n; //Номер структуры, которую надо вывести
-	if (sch == 0) { //Если счетчик количества структур равен 0, то выводим что нет записей
+	if (mas.size() == 0) { //Если счетчик количества структур равен 0, то выводим что нет записей
 		system("cls");
-		cout << "\nНет записей: \n";
+		cout << "\nНет записей \n";
 		system("pause");
 	}
 	else
 	{
 		system("cls");
-		cout << "\nВведите: \n";
-		cout << "[1]-Поиск записи товара по его номеру \n";
-		cout << "[2]-Вывод всех имеющихся записей\n";
-		cin >> sw;
-		if (sw == 1)
+		for (int i = 0; i < mas.size(); i++) //Вывод в цикле всех записей
 		{
-			system("cls");
-			cout << "Введите номер записи товара, запись которой вы хотите вывести\n";
-			cin >> n;
-			cout << endl;
-			cout << "Наименование товара: " << mas[n - 1].product_name << endl;
-			cout << "Категория товара:" << mas[n - 1].category << endl;
-			cout << "Код товара:" << mas[n - 1].product_code << endl;
-			cout << "Дата производства товара:" << mas[n - 1].production_date << endl;
-			cout << "Цена товара в рублях:" << mas[n - 1].product_price << endl;
+			cout << "Наименование товара: " << mas[i].product_name << endl;//Вывод на экран значений name i-ой структуры из массива структур mas
+			cout << "Категория товара:" << mas[i].category << endl;
+			cout << "Код товара:" << mas[i].product_code << endl;
+			cout << "Дата производства товара:" << mas[i].production_date << endl;
+			cout << "Цена товара в рублях:" << mas[i].product_price << endl;
 			cout << "____________" << endl;
-			cout << "Для обратного перехода в меню введите 1" << endl;
 		}
-		if (sw == 2)
-		{
-			system("cls");
-			for (int i = 0; i < sch; i++) //Вывод в цикле всех записей
-			{
-				cout << "Наименование товара: " << mas[i].product_name << endl;//Вывод на экран значений name i-ой структуры из массива структур mas
-				cout << "Категория товара:" << mas[i].category << endl;
-				cout << "Код товара:" << mas[i].product_code << endl;
-				cout << "Дата производства товара:" << mas[i].production_date << endl;
-				cout << "Цена товара в рублях:" << mas[i].product_price << endl;
-				cout << "____________" << endl;
-			}
-			system("pause");
-		}
-		if (sw != 1 && sw != 2) {
-			cout << "Такого пункта не существует";
-			system("pause");
-		}
+		system("pause");
 	}
 }
 
@@ -196,11 +196,11 @@ void find() //Функция поиска записей
 		cout << "5 - Найти по категории товара \n";
 		cin >> sw;
 		if (sw == 1) {
-			bool flag = false;
+			int count = 0;
 			cout << "Введите n - ";
 			int price;
 			cin >> price;
-			for (int i = 0; i < sch; i++) {
+			for (int i = 0; i < mas.size(); i++) {
 				if (mas[i].product_price < price) {
 					cout << "Наименование товара: " << mas[i].product_name << endl;//Вывод на экран значений name i-ой структуры из массива структур mas
 					cout << "Категория товара:" << mas[i].category << endl;
@@ -208,19 +208,19 @@ void find() //Функция поиска записей
 					cout << "Дата производства товара:" << mas[i].production_date << endl;
 					cout << "Цена товара в рублях:" << mas[i].product_price << endl;
 					cout << "____________" << endl;
-					flag = true;
+					count += 1;
 				}
 			}
-			if (!flag) {
+			if (count == 0) {
 				cout << "\nТовары не найдены!\n";
 			}
 		}
 		if (sw == 2) {
-			bool flag = false;
+			int count = 0;
 			cout << "Введите n - ";
 			int price;
 			cin >> price;
-			for (int i = 0; i < sch; i++) {
+			for (int i = 0; i < mas.size(); i++) {
 				if (mas[i].product_price > price) {
 					cout << "Наименование товара: " << mas[i].product_name << endl;//Вывод на экран значений name i-ой структуры из массива структур mas
 					cout << "Категория товара:" << mas[i].category << endl;
@@ -228,18 +228,19 @@ void find() //Функция поиска записей
 					cout << "Дата производства товара:" << mas[i].production_date << endl;
 					cout << "Цена товара в рублях:" << mas[i].product_price << endl;
 					cout << "____________" << endl;
+					count += 1;
 				}
 			}
-			if (!flag) {
+			if (count == 0) {
 				cout << "\nТовары не найдены!\n";
 			}
 		}
 		if (sw == 3) {
-			bool flag = false;
+			int count = 0;
 			cout << "Введите Название - ";
 			string name;
 			cin >> name;
-			for (int i = 0; i < sch; i++) {
+			for (int i = 0; i < mas.size(); i++) {
 				if (mas[i].product_name == name) {
 					cout << "Наименование товара: " << mas[i].product_name << endl;//Вывод на экран значений name i-ой структуры из массива структур mas
 					cout << "Категория товара:" << mas[i].category << endl;
@@ -247,18 +248,19 @@ void find() //Функция поиска записей
 					cout << "Дата производства товара:" << mas[i].production_date << endl;
 					cout << "Цена товара в рублях:" << mas[i].product_price << endl;
 					cout << "____________" << endl;
+					count += 1;
 				}
 			}
-			if (!flag) {
+			if (count == 0) {
 				cout << "\nТовары не найдены!\n";
 			}
 		}
 		if (sw == 4) {
-			bool flag = false;
+			int count = 0;
 			cout << "Введите код товара - ";
 			string cod;
 			cin >> cod;
-			for (int i = 0; i < sch; i++) {
+			for (int i = 0; i < mas.size(); i++) {
 				if (mas[i].product_code == cod) {
 					cout << "Наименование товара: " << mas[i].product_name << endl;//Вывод на экран значений name i-ой структуры из массива структур mas
 					cout << "Категория товара:" << mas[i].category << endl;
@@ -266,18 +268,19 @@ void find() //Функция поиска записей
 					cout << "Дата производства товара:" << mas[i].production_date << endl;
 					cout << "Цена товара в рублях:" << mas[i].product_price << endl;
 					cout << "____________" << endl;
+					count += 1;
 				}
 			}
-			if (!flag) {
+			if (count == 0) {
 				cout << "\nТовары не найдены!\n";
 			}
 		}
 		if (sw == 5) {
-			bool flag = false;
+			int count = 0;
 			cout << "Введите категорию товара - ";
 			string category;
 			cin >> category;
-			for (int i = 0; i < sch; i++) {
+			for (int i = 0; i < mas.size(); i++) {
 				if (mas[i].category == category) {
 					cout << "Наименование товара: " << mas[i].product_name << endl;//Вывод на экран значений name i-ой структуры из массива структур mas
 					cout << "Категория товара:" << mas[i].category << endl;
@@ -285,9 +288,10 @@ void find() //Функция поиска записей
 					cout << "Дата производства товара:" << mas[i].production_date << endl;
 					cout << "Цена товара в рублях:" << mas[i].product_price << endl;
 					cout << "____________" << endl;
+					count += 1;
 				}
 			}
-			if (!flag) {
+			if (count == 0) {
 				cout << "\nТовары не найдены!\n";
 			}
 		}
