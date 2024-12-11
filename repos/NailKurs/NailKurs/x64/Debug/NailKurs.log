@@ -1,0 +1,5 @@
+﻿  main.c
+C:\Users\nik85\source\repos\NailKurs\NailKurs\main.c(25,9): error C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\nik85\source\repos\NailKurs\NailKurs\main.c(43,5): error C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\nik85\source\repos\NailKurs\NailKurs\main.c(51,13): error C4996: 'wcscpy': This function or variable may be unsafe. Consider using wcscpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\nik85\source\repos\NailKurs\NailKurs\main.c(57,21): error C4996: 'wcstok': This function or variable may be unsafe. Consider using wcstok_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
